@@ -4,6 +4,8 @@ local MOD_NAME = minetest.get_current_modname()
 local MOD_PATH = minetest.get_modpath(MOD_NAME) .. "/"
 local WORLD_PATH = minetest.get_worldpath() .. "/"
 
+local defaultName = "config.yml"
+
 -- export the global yaml object
 yaml = rawget(_G, MOD_NAME)
 
@@ -56,9 +58,10 @@ if (not yaml) then
   end
   yaml.readFile = readYamlFile
 
-  local function readModConfig(filename, modPath)
+  local function readModConfig(filename, modName)
+    local modPath = minetest.get_modpath(modName) .. "/"
     if modPath then
-      if modPath:sub(-1) ~= "/" then modPath = modPath .. "/" end
+      -- if modPath:sub(-1) ~= "/" then modPath = modPath .. "/" end
       return readYamlFile(modPath .. filename)
     end
   end
@@ -69,8 +72,9 @@ if (not yaml) then
   end
   yaml.readWorldConfig = readWorldConfig
 
-  yaml.readConfig = function(filename, modPath)
-    local modConf = readModConfig(filename, modPath)
+  yaml.readConfig = function(modName, filename)
+    if not filename then filename = defaultName end
+    local modConf = readModConfig(modName, filename)
     local worldConf = readWorldConfig(filename)
     return defaults(worldConf, modConf)
   end
@@ -84,7 +88,8 @@ if (not yaml) then
   end
   yaml.writeFile = writeYamlFile
 
-  local function writeModConfig(filename, content, modPath)
+  local function writeModConfig(filename, content, modName)
+    local modPath = minetest.get_modpath(modName) .. "/"
     if modPath then
       if modPath:sub(-1) ~= "/" then modPath = modPath .. "/" end
       return writeYamlFile(modPath .. filename, content)
@@ -92,11 +97,17 @@ if (not yaml) then
   end
   yaml.writeModConfig = writeModConfig
 
-  local function writeWorldConfig(filename, content)
+  local function writeWorldConfig(content, filename)
     return writeYamlFile(WORLD_PATH .. filename, content)
   end
   yaml.writeWorldConfig = writeWorldConfig
-  yaml.writeConfig = writeWorldConfig
+
+  local function writeConfig(content, filename, modName)
+    if not filename then filename = defaultName end
+    if modName then filename = modName .. "_" .. filename end
+    return writeWorldConfig(content, filename)
+  end
+  yaml.writeConfig = writeConfig
 
 end
 
