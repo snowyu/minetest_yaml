@@ -1,5 +1,7 @@
 # Minetest YAML Config Library Mod
 
+[![ContentDB](https://content.minetest.net/packages/snowyu/yaml/shields/title/)](https://content.minetest.net/packages/snowyu/yaml/)
+
 ```yaml
 # totalPlayTime unit is minute
 totalPlayTime: 30
