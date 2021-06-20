@@ -2,6 +2,8 @@
 
 [![ContentDB](https://content.minetest.net/packages/snowyu/yaml/shields/title/)](https://content.minetest.net/packages/snowyu/yaml/)
 
+Sample YAML Config Format:
+
 ```yaml
 # totalPlayTime unit is minute
 totalPlayTime: 30
@@ -33,21 +35,6 @@ local settings = yaml.readConfig(MOD_NAME, "my-config.yml")
 -- the default filename is "config.yml" if filename not exists
 -- the filename in the world folder is MOD_NAME .. "_" .."my_config.yml"
 yaml.writeConfig(settings, "my-config.yml")# totalPlayTime unit is minute
-totalPlayTime: 30
-# Whether skip the question which has already be answered correctly.
-skipAnswered: 1
-# checkInterval unit is seconds
-checkInterval: 10
-# idleInterval unit is minute
-idleInterval: 1
-quiz:
-  - id: favorColor
-    title: "What's my favor color?"
-    answer: red
-  - id: theYear
-  - title: "What's the year?"
-    answer: 2021
-
 ```
 
 ## API
