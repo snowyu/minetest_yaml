@@ -1,5 +1,23 @@
 # Minetest YAML Config Library Mod
 
+```yaml
+# totalPlayTime unit is minute
+totalPlayTime: 30
+# Whether skip the question which has already be answered correctly.
+skipAnswered: 1
+# checkInterval unit is seconds
+checkInterval: 10
+# idleInterval unit is minute
+idleInterval: 1
+quiz: # question list
+  - id: favorColor
+    title: "What's my favor color?"
+    answer: red
+  - id: theYear
+  - title: "What's the year?"
+    answer: 2021
+```
+
 ## Usage
 
 ```lua
@@ -12,7 +30,22 @@ local settings = yaml.readConfig(MOD_NAME, "my-config.yml")
 -- save the config file to world directory
 -- the default filename is "config.yml" if filename not exists
 -- the filename in the world folder is MOD_NAME .. "_" .."my_config.yml"
-yaml.writeConfig(settings, "my-config.yml")
+yaml.writeConfig(settings, "my-config.yml")# totalPlayTime unit is minute
+totalPlayTime: 30
+# Whether skip the question which has already be answered correctly.
+skipAnswered: 1
+# checkInterval unit is seconds
+checkInterval: 10
+# idleInterval unit is minute
+idleInterval: 1
+quiz:
+  - id: favorColor
+    title: "What's my favor color?"
+    answer: red
+  - id: theYear
+  - title: "What's the year?"
+    answer: 2021
+
 ```
 
 ## API
@@ -38,3 +71,5 @@ yaml.writeConfig(settings, "my-config.yml")
   * return content if successful
 * yaml.writeFile(filepath, content)
   * return true if successful
+
+Using the [lua-yaml](https://github.com/exosite/lua-yaml) as yaml parser.
