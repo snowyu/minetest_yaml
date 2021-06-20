@@ -32,8 +32,9 @@ yaml.writeConfig(settings, "my-config.yml")
 * yaml.writeWorldConfig(content, filename)
 * yaml.defaults(target, default)
   * merge the default to the target table
+  * return target
 * yaml.readFile(filepath)
   * read whole file
   * return content if successful
-* yaml.writeFile(filepath)
+* yaml.writeFile(filepath, content)
   * return true if successful
