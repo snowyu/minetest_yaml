@@ -74,7 +74,7 @@ if (not yaml) then
 
   yaml.readConfig = function(modName, filename)
     if not filename then filename = defaultName end
-    local modConf = readModConfig(modName, filename)
+    local modConf = readModConfig(filename, modName)
     local worldConf = readWorldConfig(filename)
     return defaults(worldConf, modConf)
   end
