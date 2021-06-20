@@ -10,17 +10,17 @@ local MOD_NAME = minetest.get_current_modname()
 -- the filename in the world folder is MOD_NAME .. "_my-config.yml"
 local settings = yaml.readConfig(MOD_NAME, "my-config.yml")
 -- save the config file to world directory
--- the default filename is "config.yml"
--- the filename in the world folder is MOD_NAME .. "_" .."config.yml"
-yaml.writeConfig(settings)
+-- the default filename is "config.yml" if filename not exists
+-- the filename in the world folder is MOD_NAME .. "_" .."my_config.yml"
+yaml.writeConfig(settings, "my-config.yml")
 ```
 
 ## API
 
 * yaml.readConfig(modName, filename = "config.yml")
-  * first load the file in mod directory as default settings
-  * then load from world directory
-  * merge the settings at last
+  * first load the yaml file in mod directory as default settings
+  * then load file from world directory
+  * return merge the two settings together at last
 * yaml.writeConfig(settings, filename = "config.yml", modName)
   * save the config file to the world directory
 * yaml.readYamlFile(filepath)
