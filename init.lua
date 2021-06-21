@@ -47,12 +47,14 @@ if (not yaml) then
     end
   end
 
-  yaml = dofile(MOD_PATH .. "/yaml/yaml.lua")
+  local Yaml = dofile(MOD_PATH .. "/yaml/yaml.lua")
+  yaml.dump = Yaml.dump
+  yaml.eval = Yaml.eval
 
   local function readYamlFile(filepath)
     local content = readFile(filepath)
     if content then
-      local result = yaml.eval(content)
+      local result = Yaml.eval(content)
       return result
     end
   end
@@ -67,7 +69,8 @@ if (not yaml) then
   end
   yaml.readModConfig = readModConfig
 
-  local function readWorldConfig(filename)
+  local function readWorldConfig(filename, modName)
+    if modName then filename = modName .. "_" .. filename end
     return readYamlFile(WORLD_PATH .. filename)
   end
   yaml.readWorldConfig = readWorldConfig
@@ -75,14 +78,14 @@ if (not yaml) then
   yaml.readConfig = function(modName, filename)
     if not filename then filename = defaultName end
     local modConf = readModConfig(filename, modName)
-    local worldConf = readWorldConfig(filename)
+    local worldConf = readWorldConfig(filename, modName)
     return defaults(worldConf, modConf)
   end
 
   local function writeYamlFile(filepath, content)
-    content = yaml.dump(content)
-    if content then
-      local result = writeFile(filepath, content)
+    local str = Yaml.dump(content)
+    if str then
+      local result = writeFile(filepath, str)
       return result
     end
   end
