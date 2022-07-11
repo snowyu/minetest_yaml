@@ -7,9 +7,7 @@ local WORLD_PATH = minetest.get_worldpath() .. "/"
 local defaultName = "config.yml"
 
 -- export the global yaml object
-yaml = rawget(_G, MOD_NAME)
-
-if (not yaml) then
+if (not rawget(_G, MOD_NAME)) then
   yaml = {}
   local function defaults(t1, t2)
     if (not t2) then return t1 end
