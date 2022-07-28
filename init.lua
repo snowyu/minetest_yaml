@@ -27,8 +27,9 @@ if (not rawget(_G, MOD_NAME)) then
   end
   yaml.defaults = defaults
 
-  local function readFile(filepath)
-    local f = io.open(filepath, "rb")
+  local function readFile(filepath, mode)
+    if type(mode) ~= "string" or #mode == 0 then mode = "rb" end
+    local f = io.open(filepath, mode)
     if f then
       local content = f:read("*all")
       f:close()
@@ -36,9 +37,15 @@ if (not rawget(_G, MOD_NAME)) then
     end
   end
 
-  local function writeFile(filepath, content)
-    local f = io.open(filepath, "wb")
+  local function writeFile(filepath, content, mode)
+    if type(mode) ~= "string" or #mode == 0 then
+      mode = "wb"
+    end
+    local f = io.open(filepath, mode)
     if f then
+      if mode:sub(1,1) == "a" then
+        f:write("\n")
+      end
       f:write(content)
       f:close()
       return true
@@ -80,33 +87,33 @@ if (not rawget(_G, MOD_NAME)) then
     return defaults(worldConf, modConf)
   end
 
-  local function writeYamlFile(filepath, content)
+  local function writeYamlFile(filepath, content, mode)
     local str = Yaml.dump(content)
     if str then
-      local result = writeFile(filepath, str)
+      local result = writeFile(filepath, str, mode)
       return result
     end
   end
   yaml.writeFile = writeYamlFile
 
-  local function writeModConfig(filename, content, modName)
+  local function writeModConfig(filename, content, modName, mode)
     local modPath = minetest.get_modpath(modName) .. "/"
     if modPath then
       if modPath:sub(-1) ~= "/" then modPath = modPath .. "/" end
-      return writeYamlFile(modPath .. filename, content)
+      return writeYamlFile(modPath .. filename, content, mode)
     end
   end
   yaml.writeModConfig = writeModConfig
 
-  local function writeWorldConfig(content, filename)
-    return writeYamlFile(WORLD_PATH .. filename, content)
+  local function writeWorldConfig(content, filename, mode)
+    return writeYamlFile(WORLD_PATH .. filename, content, mode)
   end
   yaml.writeWorldConfig = writeWorldConfig
 
-  local function writeConfig(content, filename, modName)
+  local function writeConfig(content, filename, modName, mode)
     if not filename then filename = defaultName end
     if modName then filename = modName .. "_" .. filename end
-    return writeWorldConfig(content, filename)
+    return writeWorldConfig(content, filename, mode)
   end
   yaml.writeConfig = writeConfig
 
