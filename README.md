@@ -35,6 +35,8 @@ local settings = yaml.readConfig(MOD_NAME, "my-config.yml")
 -- the default filename is "config.yml" if filename not exists
 -- the filename in the world folder is MOD_NAME .. "_" .."my_config.yml"
 yaml.writeConfig(settings, "my-config.yml")# totalPlayTime unit is minute
+-- append config to file
+yaml.writeConfig({ {time = os.time(), content = "content"} }, "my-log.yml", "a")
 ```
 
 ## API
@@ -43,22 +45,22 @@ yaml.writeConfig(settings, "my-config.yml")# totalPlayTime unit is minute
   * first load the yaml file in mod directory as default settings
   * then load file from world directory
   * return merge the two settings together at last
-* yaml.writeConfig(settings, filename = "config.yml", modName)
+* yaml.writeConfig(settings, filename = "config.yml", modName, mode = "wb")
   * save the config file to the world directory
 * yaml.readYamlFile(filepath)
   * read a YAML format file
 * yaml.readModConfig(filename, modName)
 * yaml.readWorldConfig(filename)
-* yaml.writeYamlFile(filepath, content)
-* yaml.writeModConfig(filename, content, modName)
-* yaml.writeWorldConfig(content, filename)
+* yaml.writeYamlFile(filepath, content, mode = "wb")
+* yaml.writeModConfig(filename, content, modName, mode = "wb")
+* yaml.writeWorldConfig(content, filename, mode = "wb")
 * yaml.defaults(target, default)
   * merge the default to the target table
   * return target
-* yaml.readFile(filepath)
+* yaml.readFile(filepath, mode = "rb")
   * read whole file
   * return content if successful
-* yaml.writeFile(filepath, content)
+* yaml.writeFile(filepath, content, mode = "wb")
   * return true if successful
 
 Using the [lua-yaml](https://github.com/exosite/lua-yaml) as yaml parser.
