@@ -13,7 +13,8 @@ skipAnswered: 1
 checkInterval: 10
 # idleInterval unit is minute
 idleInterval: 1
-quiz: # question list
+# question list
+quiz:
   - id: favorColor
     title: "What's my favor color?"
     answer: red
