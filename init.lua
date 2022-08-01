@@ -9,18 +9,30 @@ local defaultName = "config.yml"
 -- export the global yaml object
 if (not rawget(_G, MOD_NAME)) then
   yaml = {}
-  local function defaults(t1, t2)
+
+  local function contains(list, x)
+    if list == nil then return false end
+    for _, v in pairs(list) do
+      if v == x then return true end
+    end
+    return false
+  end
+  yaml.contains = contains
+
+  local function defaults(t1, t2, exclude)
     if (not t2) then return t1 end
     if (not t1) then return t2 end
     for k,v in pairs(t2) do
-      if type(v) == "table" then
-        if type(t1[k] or false) == "table" then
-          defaults(t1[k] or {}, t2[k] or {})
+      if not contains(exclude, k) then
+        if type(v) == "table" then
+          if type(t1[k] or false) == "table" then
+            defaults(t1[k] or {}, t2[k] or {})
+          else
+            t1[k] = v
+          end
         else
-          t1[k] = v
+          if (t1[k] == nil or type(t1[k]) ~= type(t2[k])) then t1[k] = v end
         end
-      else
-        if (t1[k] == nil or type(t1[k]) ~= type(t2[k])) then t1[k] = v end
       end
     end
     return t1
@@ -80,11 +92,11 @@ if (not rawget(_G, MOD_NAME)) then
   end
   yaml.readWorldConfig = readWorldConfig
 
-  yaml.readConfig = function(modName, filename)
+  yaml.readConfig = function(modName, filename, exclude)
     if not filename then filename = defaultName end
     local modConf = readModConfig(filename, modName)
     local worldConf = readWorldConfig(filename, modName)
-    return defaults(worldConf, modConf)
+    return defaults(worldConf, modConf, exclude)
   end
 
   local function writeYamlFile(filepath, content, mode)

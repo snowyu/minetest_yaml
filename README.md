@@ -42,10 +42,10 @@ yaml.writeConfig({ {time = os.time(), content = "content"} }, "my-log.yml", "a")
 
 ## API
 
-* yaml.readConfig(modName, filename = "config.yml")
+* yaml.readConfig(modName, filename = "config.yml", exclude = nil)
   * first load the yaml file in mod directory as default settings
   * then load file from world directory
-  * return merge the two settings together at last
+  * return merge the two settings together at last, ignore the keys in exclude list.
 * yaml.writeConfig(settings, filename = "config.yml", modName, mode = "wb")
   * save the config file to the world directory
 * yaml.readYamlFile(filepath)
