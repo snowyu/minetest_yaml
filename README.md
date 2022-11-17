@@ -35,7 +35,7 @@ local settings = yaml.readConfig(MOD_NAME, "my-config.yml")
 -- save the config file to world directory
 -- the default filename is "config.yml" if filename not exists
 -- the filename in the world folder is MOD_NAME .. "_" .."my_config.yml"
-yaml.writeConfig(settings, "my-config.yml")# totalPlayTime unit is minute
+yaml.writeConfig(settings, "my-config.yml")
 -- append config to file
 yaml.writeConfig({ {time = os.time(), content = "content"} }, "my-log.yml", "a")
 ```
@@ -55,13 +55,19 @@ yaml.writeConfig({ {time = os.time(), content = "content"} }, "my-log.yml", "a")
 * yaml.writeYamlFile(filepath, content, mode = "wb")
 * yaml.writeModConfig(filename, content, modName, mode = "wb")
 * yaml.writeWorldConfig(content, filename, mode = "wb")
-* yaml.defaults(target, default)
-  * merge the default to the target table
-  * return target
 * yaml.readFile(filepath, mode = "rb")
   * read whole file
   * return content if successful
 * yaml.writeFile(filepath, content, mode = "wb")
   * return true if successful
+* yaml.dump(obj)
+  * convert the obj to YAML string
+* yaml.eval(str)
+  * convert the str to the lua object.
+* yaml.defaults(target, default)
+  * merge the default to the target table
+  * return target
+* yaml.contains(list, value)
+  * whether the list contains the value.
 
 Using the [lua-yaml](https://github.com/exosite/lua-yaml) as yaml parser.
