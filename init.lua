@@ -78,13 +78,21 @@ if (not rawget(_G, MOD_NAME)) then
   yaml.readFile = readYamlFile
 
   local function readModConfig(filename, modName)
-    local modPath = minetest.get_modpath(modName) .. "/"
+    local modPath = minetest.get_modpath(modName)
     if modPath then
       -- if modPath:sub(-1) ~= "/" then modPath = modPath .. "/" end
-      return readYamlFile(modPath .. filename)
+      return readYamlFile(modPath .. DIR_DELIM .. filename)
     end
   end
   yaml.readModConfig = readModConfig
+
+  local function readModDataConfig(filename, modName)
+    local pattern = "(.*" .. DIR_DELIM .. ")worlds" .. DIR_DELIM .. ".*" .. DIR_DELIM
+    local modDataPath = string.match(WORLD_PATH, pattern) .. "mod_data" .. DIR_DELIM ..
+    modName .. DIR_DELIM .. filename
+    return readYamlFile(modDataPath)
+  end
+  yaml.readModDataConfig = readModDataConfig
 
   local function readWorldConfig(filename, modName)
     if modName then filename = modName .. "_" .. filename end
@@ -95,6 +103,11 @@ if (not rawget(_G, MOD_NAME)) then
   yaml.readConfig = function(modName, filename, exclude)
     if not filename then filename = defaultName end
     local modConf = readModConfig(filename, modName)
+    local vModName = minetest.get_current_modname()
+    if (vModName) then
+      local modData = readModDataConfig(filename, modName)
+      modConf = defaults(modData, modConf, exclude)
+    end
     local worldConf = readWorldConfig(filename, modName)
     return defaults(worldConf, modConf, exclude)
   end
@@ -109,13 +122,22 @@ if (not rawget(_G, MOD_NAME)) then
   yaml.writeFile = writeYamlFile
 
   local function writeModConfig(filename, content, modName, mode)
-    local modPath = minetest.get_modpath(modName) .. "/"
+    local modPath = minetest.get_modpath(modName)
     if modPath then
-      if modPath:sub(-1) ~= "/" then modPath = modPath .. "/" end
+      if modPath:sub(-1) ~= DIR_DELIM then modPath = modPath .. DIR_DELIM end
       return writeYamlFile(modPath .. filename, content, mode)
     end
   end
   yaml.writeModConfig = writeModConfig
+
+  local function writeModDataConfig(filename, content, modName, mode)
+    local pattern = "(.*" .. DIR_DELIM .. ")worlds" .. DIR_DELIM .. ".*" .. DIR_DELIM
+    local modDataPath = string.match(WORLD_PATH, pattern) .. "mod_data" .. DIR_DELIM ..
+    modName .. DIR_DELIM .. filename
+
+    return writeYamlFile(modDataPath, content, mode)
+  end
+  yaml.writeModDataConfig = writeModDataConfig
 
   local function writeWorldConfig(content, filename, mode)
     return writeYamlFile(WORLD_PATH .. filename, content, mode)
