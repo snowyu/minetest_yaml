@@ -105,8 +105,10 @@ if (not rawget(_G, MOD_NAME)) then
     local modConf = readModConfig(filename, modName)
     local vModName = minetest.get_current_modname()
     if (vModName) then
-      local modData = readModDataConfig(filename, modName)
-      modConf = defaults(modData, modConf, exclude)
+      local ok, modData = pcall(readModDataConfig, filename, modName)
+      if ok then
+        modConf = defaults(modData, modConf, exclude)
+      end
     end
     local worldConf = readWorldConfig(filename, modName)
     return defaults(worldConf, modConf, exclude)
