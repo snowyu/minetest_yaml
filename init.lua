@@ -1,8 +1,8 @@
 -- yaml/init.lua
 
 local MOD_NAME = minetest.get_current_modname()
-local MOD_PATH = minetest.get_modpath(MOD_NAME) .. "/"
-local WORLD_PATH = minetest.get_worldpath() .. "/"
+local MOD_PATH = minetest.get_modpath(MOD_NAME) .. DIR_DELIM
+local WORLD_PATH = minetest.get_worldpath() .. DIR_DELIM
 
 local defaultName = "config.yml"
 
@@ -86,11 +86,18 @@ if (not rawget(_G, MOD_NAME)) then
   end
   yaml.readModConfig = readModConfig
 
+  -- The config file name could be [filename].yml or [modName]_[filename].yml
   local function readModDataConfig(filename, modName)
     local pattern = "(.*" .. DIR_DELIM .. ")worlds" .. DIR_DELIM .. ".*" .. DIR_DELIM
-    local modDataPath = string.match(WORLD_PATH, pattern) .. "mod_data" .. DIR_DELIM ..
-    modName .. DIR_DELIM .. filename
-    return readYamlFile(modDataPath)
+    local modDataDir = string.match(WORLD_PATH, pattern) .. "mod_data" .. DIR_DELIM ..
+    modName .. DIR_DELIM
+    local modDataPath = modDataDir .. filename
+    local result = readYamlFile(modDataPath)
+    if (result == nil) and modName then
+      modDataPath = modDataDir .. modName .. '_' .. filename
+      result = readYamlFile(modDataPath)
+    end
+    return result
   end
   yaml.readModDataConfig = readModDataConfig
 
