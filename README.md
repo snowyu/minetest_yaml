@@ -44,16 +44,23 @@ yaml.writeConfig({ {time = os.time(), content = "content"} }, "my-log.yml", "a")
 
 * yaml.readConfig(modName, filename = "config.yml", exclude = nil)
   * first load the yaml file in mod directory as default settings
-  * then load file from world directory
-  * return merge the two settings together at last, ignore the keys in exclude list.
+  * then load file from `mod_data` directory if exists
+  * last load file from world directory
+  * return merge the settings together at last, ignore the keys in exclude list.
 * yaml.writeConfig(settings, filename = "config.yml", modName, mode = "wb")
-  * save the config file to the world directory
+  * first try to save the configuration file in the "`mod_data`" folder first
+  * if fails, save it in the world directory
 * yaml.readYamlFile(filepath)
   * read a YAML format file
 * yaml.readModConfig(filename, modName)
+* yaml.readModDataConfig(filename, modName)
+  * **Note**: you should merge the [world-independent storage directory for mods](https://github.com/minetest/minetest/pull/12315/) branch before using this.
+  * The config file name could be `[filename].yml` or `[modName]_[filename].yml`
 * yaml.readWorldConfig(filename)
 * yaml.writeYamlFile(filepath, content, mode = "wb")
 * yaml.writeModConfig(filename, content, modName, mode = "wb")
+* yaml.writeModDataConfig(filename, content, modName, mode = "wb")
+  * **Note**: you should merge the [world-independent storage directory for mods](https://github.com/minetest/minetest/pull/12315/) branch before using this.
 * yaml.writeWorldConfig(content, filename, mode = "wb")
 * yaml.readFile(filepath, mode = "rb")
   * read whole file
