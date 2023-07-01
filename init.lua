@@ -3,12 +3,26 @@
 local MOD_NAME = minetest.get_current_modname()
 local MOD_PATH = minetest.get_modpath(MOD_NAME) .. DIR_DELIM
 local WORLD_PATH = minetest.get_worldpath() .. DIR_DELIM
+local log = minetest.log
 
 local defaultName = "config.yml"
 
 -- export the global yaml object
 if (not rawget(_G, MOD_NAME)) then
   yaml = {}
+
+  local function tryCall(...)
+    local ok, result = pcall(...)
+    if not ok then
+      -- local args = {...}
+      -- for i=1, #args do
+      --   args[i] = dump(args[i])
+      -- end
+      log('warning', result)
+      log('warning', debug.traceback())
+    end
+    return ok, result
+  end
 
   local function contains(list, x)
     if list == nil then return false end
@@ -112,7 +126,7 @@ if (not rawget(_G, MOD_NAME)) then
     local modConf = readModConfig(filename, modName)
     local vModName = minetest.get_current_modname()
     if (vModName) then
-      local ok, modData = pcall(readModDataConfig, filename, modName)
+      local ok, modData = tryCall(readModDataConfig, filename, modName)
       if ok then
         modConf = defaults(modData, modConf, exclude)
       end
@@ -156,7 +170,13 @@ if (not rawget(_G, MOD_NAME)) then
   local function writeConfig(content, filename, modName, mode)
     if not filename then filename = defaultName end
     if modName then filename = modName .. "_" .. filename end
-    return writeWorldConfig(content, filename, mode)
+    local inDir = 'modData'
+    local ok, result = tryCall(writeModDataConfig, filename, content, modName, mode)
+    if not ok or not result then
+      result = writeWorldConfig(content, filename, mode)
+      inDir = 'world'
+    end
+    return result, inDir
   end
   yaml.writeConfig = writeConfig
 
